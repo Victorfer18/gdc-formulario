@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Group Brasil</title>
+    <link rel="shortcut icon" href="./assets/img/ico.png" type="image/x-icon">
+    <link rel="stylesheet" href="./assets/css/index.css">
+    <script src="./assets/js/index.js" type="module" defer></script>
+</head>
+
+<body>
+
+    <div id="app">
+        <router-view></router-view>
+    </div>
+
+    <template id="c-login">
+        <div class="l-login">
+            <form action="javascript:void(0)" @submit="login()" class="form form--login">
+                <img src="./assets/img/logo-branco.png" class="login__logo">
+                <div class="space"></div>
+                <input type="email" v-model="email" placeholder="E-mail" required>
+                <input type="password" v-model="senha" placeholder="Senha" required>
+                <button type="submit" class="btn btn--login">ENTRAR</button>
+                <span class="alert" v-if="error" @click="error=false"> Usuário ou senha errado  </span>
+            </form>
+        </div>
+    </template>
+    
+    <template id="c-form">
+        <div class="l-form">
+            <div v-if="is_edit" class="editing">
+                <button class="btn btn--success" @click="doc_new()">Carregar Novo Documento</button>
+            </div>
+            <div class="a-actions">
+                <img src="./assets/icon/loupe.svg" class="loupe" @click="zoom_default()">
+                <input type="range" class="range" min="250" max="1500" v-model="zoom" >
+            </div>
+            <div class="a-files">
+                <img  :src="fila.image(img)" v-for="img in galery" @click="doc_set(img)" :class="{ active: img == image_destac }">                
+            </div>
+            <div class="a-img" ref="image" :style="{ 'padding-left': margen_zoom.left + 'px', 'padding-top': margen_zoom.top + 'px' }">
+                <img :src="fila.image(image_destac)" class="zoom" :style="{width: zoom+'px'}">
+            </div>
+            <div class="a-questions">
+                <div class="l-corruente-user ">
+                    <img src="./assets/icon/gravatar.svg">
+                    <span>{{ corruente_user.nome }}</span>
+                    <img src="./assets/icon/logout.svg" @click="logout()">
+                </div>
+                <div class="steps">
+                    <span v-for="(fr, index) in questions.length" :class="$route.params.step == index + 1 ? 'active' : ''"></span>
+                </div>
+                <div class="forms" ref="forms">
+                    <div>
+                        <form v-for="(fr, index) in questions" v-if=" $route.params.step == ( index + 1) " action="javascript:void(0)" @submit="next_stap()" class="form form--questions">
+                            <h4>{{ fr.nome }}</h4>
+                            <div v-for="q in fr.questions" class="combo_input">
+                                <label for="">{{ q.enunciado }}</label>
+                                <span v-for="(input, index ) in q.arr.split(',')">
+                                    <input 
+                                        type="radio" 
+                                        :name="'option_'+q.codigo"
+                                        @click="responder( q.codigo, index + 1  )"
+                                        >
+                                    <small> {{ input }} </small>
+                                </span>
+                            </div>
+                            <div v-if="$route.params.step < questions.length">
+                                <button type="submit" class="btn btn--state">NEXT</button>
+                            </div>
+                            <div v-else>
+                                <button type="submit" class="btn btn--state">FINALIZAR</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- <h1>formulario {{ $route.params.step  }}</h1> -->
+                </div>
+                <div>
+                    <button class="btn btn--cancel" @click="doc_cancel()">Cancelar Preenchimento</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+</body>
+
+</html>
