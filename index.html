@@ -35,11 +35,23 @@
             <div v-if="is_edit" class="editing">
                 <button class="btn btn--success" @click="doc_new()">Carregar Novo Documento</button>
             </div>
+            <div v-if="popup" class="popup_danger">
+                <form action="javascript:void(0)" @submit="toggle_pop()" class="form">
+                    <textarea  rows="4" placeholder="Informe o motivo"></textarea>
+                    <button class="btn btn--state">Relatar</button>
+                </form>
+            </div>
             <div class="a-actions">
                 <img src="./assets/icon/loupe.svg" class="loupe" @click="zoom_default()">
                 <input type="range" class="range" min="250" max="1500" v-model="zoom" >
             </div>
             <div class="a-files">
+                <div class="vitais">
+                    <span> <b>Nome</b>: {{ vital.nome }} </span> <br>
+                    <span> <b>Altura</b>: {{ vital.altura }} </span>
+                    <span> <b>Peso</b>: {{ vital.peso }} </span>
+                    <span> <b>Presão</b>: {{ vital.presao }} </span>
+                </div>
                 <img  :src="fila.image(img)" v-for="img in galery" @click="doc_set(img)" :class="{ active: img == image_destac }">                
             </div>
             <div class="a-img" ref="image" :style="{ 'padding-left': margen_zoom.left + 'px', 'padding-top': margen_zoom.top + 'px' }">
@@ -79,7 +91,8 @@
                     </div>
                     <!-- <h1>formulario {{ $route.params.step  }}</h1> -->
                 </div>
-                <div>
+                <div class="l-btns">
+                    <img class="danger" @click="toggle_pop()" src="./assets/icon/danger.svg">
                     <button class="btn btn--cancel" @click="doc_cancel()">Cancelar Preenchimento</button>
                 </div>
             </div>

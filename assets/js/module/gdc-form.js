@@ -7,6 +7,13 @@ export default {
             auth,
             cache,
             fila,
+            popup: false,
+            vital: {
+                nome: 'Jose Antonio',
+                altura: '1,75',
+                peso: '87',
+                presao: '12,5',
+            },
             corruente_user: {
                 nome: "Bruno Vieira",
             },
@@ -126,6 +133,7 @@ export default {
                 this.is_edit = true
             }
         },
+        toggle_pop() { this.popup = !this.popup }
     },
     async mounted() {
         await this.pivate()

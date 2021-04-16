@@ -61,6 +61,14 @@
     background-color: #bdc3c7;
     padding: 18px;
     justify-content: flex-end;
+    position: relative;
+}
+.vitais {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 20px;
+    color: #333;
 }
 .a-files img {
     display: block;
@@ -172,8 +180,7 @@
     width: 15px;
     height: 15px;
     border-radius: 50px;
-    margin: 0 10px;
-   
+    margin: 0 10px;   
 }
 .steps span.active {
     outline: 1px solid #2980b9;
@@ -201,4 +208,40 @@
 .editing button {
     width: 320px;
     box-shadow: 3px 3px 3px #0003;
+}
+.l-btns {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    grid-gap: 20px;
+}
+.danger {
+    background-color: #C00;
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.danger:hover {
+    background-color: #800;
+    cursor: pointer;
+}
+.popup_danger {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background-color: #3498dbDD;
+    z-index: 99999999;
+    backdrop-filter: blur(3px);
+}
+.popup_danger  form {
+    width: 320px;
+    background-color: #FFF;
+    padding: 30px;
+    border-radius: 7px;
 }
