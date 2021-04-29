@@ -108,8 +108,8 @@ const fila = {
     get: async () => await Api.get('/v1/fila', { jwt: (await auth.jwt()) }),
     the_end: async (caixa, documento) => await Api.post('/v1/finalizar', { jwt: (await auth.jwt()), caixa, documento }),
     questions: async codigo_empresa => await Api.get('/v1/formulario', { jwt: (await auth.jwt()), codigo_empresa }),
-    image: foto => `http://api.digitalgroupbrasil.com.br/v1/image/${foto}`,
-    resposta: async (usuario_id, caixa, documento, pergunta_codigo, value) => await Api.get('/v1/formulario', { jwt: (await auth.jwt()), usuario_id, caixa, documento, pergunta_codigo, value }),
+    image: (caixa, seguencia, foto) => `http://api.digitalgroupbrasil.com.br/v1/image/${caixa}/${seguencia}/${foto}`,
+    resposta: async (usuario_id, caixa, documento, pergunta_codigo, value) => await Api.post('/v1/resposta', { jwt: (await auth.jwt()), usuario_id, caixa, documento, pergunta_codigo, value }),
     cancel: async (caixa, documento) => await Api.get('/v1/formulario', { jwt: (await auth.jwt()), caixa, documento })
 }
 

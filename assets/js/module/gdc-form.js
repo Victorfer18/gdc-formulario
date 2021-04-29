@@ -8,6 +8,7 @@ export default {
             cache,
             fila,
             popup: false,
+            loading: false,
             vital: {
                 nome: 'Jose Antonio',
                 altura: '1,75',
@@ -97,16 +98,20 @@ export default {
             if( this.$route.params.step < this.questions.length ) {
                 this.$router.push(`/dash/${++this.$route.params.step}`)
             }else {
+                this.loading = true
                 let user = await this.auth.get()
+                setInterval( () => {
+                    this.loading = false
+                }, 3000 )
                 this.$router.push(`/dash/1`)
-                this.fila.the_end(user.id, this.cache.fila.caixa)
+                this.fila.the_end(user.id, this.cache.fila.sequencia_code)
                 this.doc_new()
             }
             this.$refs.forms.scrollTop = 0
         },
         async responder( pergunta_codigo, value ) {
             let user = await this.auth.get()
-            this.fila.resposta(user.id, this.cache.fila.caixa, this.cache.fila.documento, pergunta_codigo, value)
+            this.fila.resposta(user.id, this.cache.fila.caixa, this.cache.fila.sequencia_code, pergunta_codigo, value)
         },
         drag_img() {
             this.$refs.image.addEventListener('mousedown', (event) => {             

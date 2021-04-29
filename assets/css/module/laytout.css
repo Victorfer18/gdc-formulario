@@ -245,3 +245,18 @@
     padding: 30px;
     border-radius: 7px;
 }
+.finalizando {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-weight: bolder;
+    color: #EEE;
+    background-color: rgba(0, 0, 0, .7);
+    backdrop-filter: blur(7px);
+    z-index: 999999;
+}

@@ -32,6 +32,9 @@
     
     <template id="c-form">
         <div class="l-form">
+            <div class="finalizando" v-if="loading">
+                Finalizando...
+            </div>
             <div v-if="is_edit" class="editing">
                 <button class="btn btn--success" @click="doc_new()">Carregar Novo Documento</button>
             </div>
@@ -52,10 +55,10 @@
                     <span> <b>Peso</b>: {{ vital.peso }} </span>
                     <span> <b>Presão</b>: {{ vital.presao }} </span>
                 </div>
-                <img  :src="fila.image(img)" v-for="img in galery" @click="doc_set(img)" :class="{ active: img == image_destac }">                
+                <img  :src="fila.image(cache.fila.caixa,cache.fila.batchtrack,img)" v-for="img in galery" @click="doc_set(img)" :class="{ active: img == image_destac }">                
             </div>
             <div class="a-img" ref="image" :style="{ 'padding-left': margen_zoom.left + 'px', 'padding-top': margen_zoom.top + 'px' }">
-                <img :src="fila.image(image_destac)" class="zoom" :style="{width: zoom+'px'}">
+                <img :src="fila.image(cache.fila.caixa,cache.fila.batchtrack,image_destac)" class="zoom" :style="{width: zoom+'px'}">
             </div>
             <div class="a-questions">
                 <div class="l-corruente-user ">
@@ -72,7 +75,13 @@
                             <h4>{{ fr.nome }}</h4>
                             <div v-for="q in fr.questions" class="combo_input">
                                 <label for="">{{ q.enunciado }}</label>
-                                <span v-for="(input, index ) in q.arr.split(',')">
+                                <input 
+                                    type="text" 
+                                    v-if="q.tipo_campo != 'radio'" 
+                                    :name="'option_'+q.codigo"
+                                    @click="responder( q.codigo, index + 1  )" >
+                                
+                                <span v-if="q.tipo_campo == 'radio'"  v-for="(input, index ) in q.arr.split(',')">
                                     <input 
                                         type="radio" 
                                         :name="'option_'+q.codigo"
@@ -89,7 +98,6 @@
                             </div>
                         </form>
                     </div>
-                    <!-- <h1>formulario {{ $route.params.step  }}</h1> -->
                 </div>
                 <div class="l-btns">
                     <img class="danger" @click="toggle_pop()" src="./assets/icon/danger.svg">
