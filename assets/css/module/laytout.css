@@ -260,3 +260,12 @@
     backdrop-filter: blur(7px);
     z-index: 999999;
 }
+.error {
+    display: block;
+    margin: 7px;
+    border-radius: 4px;
+    padding: 18px;
+    background-color: #f1c40f;
+    font-size: 11px;
+    color: #2c3e50;
+}

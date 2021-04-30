@@ -9,6 +9,7 @@ export default {
             fila,
             popup: false,
             loading: false,
+            sinais_vitais: {},
             vital: {
                 nome: 'Jose Antonio',
                 altura: '1,75',
@@ -20,7 +21,7 @@ export default {
             },
             is_edit: false,
             questions: [],
-            zoom: 350,
+            zoom: 800,
             margen_zoom: {
                 top: 0,
                 left: 0
@@ -32,6 +33,10 @@ export default {
                 x: 0, 
                 y: 0,
             },
+            error: {
+                status: false,
+                message: ''
+            }
         }
     },
     methods: {
@@ -95,23 +100,53 @@ export default {
             this.corruente_user.nome = user.nome
         },
         async next_stap() {
-            if( this.$route.params.step < this.questions.length ) {
-                this.$router.push(`/dash/${++this.$route.params.step}`)
-            }else {
-                this.loading = true
-                let user = await this.auth.get()
-                setInterval( () => {
+            if( this.$route.params.step == 1 ) {
+                this.loading = true 
+                let res = await this.fila.sinais_vitais(
+                    this.sinais_vitais.temperatura,
+                    this.cache.fila.data || '00/00/000',
+                    this.sinais_vitais.Altura,
+                    this.sinais_vitais.biotipo,
+                    this.sinais_vitais.pulso,
+                    this.sinais_vitais.frequencia,
+                    this.sinais_vitais.cintura,
+                    this.sinais_vitais.quadril,
+                    this.sinais_vitais.peso,
+                    this.sinais_vitais.pressao_max,
+                    this.sinais_vitais.pressao_min,
+                )
+                if ( res.status ) {
+                    this.$router.push(`/dash/${++this.$route.params.step}`)
                     this.loading = false
-                }, 3000 )
-                this.$router.push(`/dash/1`)
-                this.fila.the_end(user.id, this.cache.fila.sequencia_code)
-                this.doc_new()
+                } else {
+                    this.loading = false
+                    this.error.status = true
+                    this.error.message = res.message
+                }
+
+            } else {
+                if( this.$route.params.step < this.questions.length ) {
+                    this.$router.push(`/dash/${++this.$route.params.step}`)
+                }else {
+                    this.loading = true
+                    let user = await this.auth.get()
+                    setInterval( () => {
+                        this.loading = false
+                    }, 3000 )
+                    this.$router.push(`/dash/1`)
+                    this.fila.the_end(user.id, this.cache.fila.sequencia_code)
+                    this.doc_new()
+                }
+                this.$refs.forms.scrollTop = 0
             }
-            this.$refs.forms.scrollTop = 0
         },
-        async responder( pergunta_codigo, value ) {
-            let user = await this.auth.get()
-            this.fila.resposta(user.id, this.cache.fila.caixa, this.cache.fila.sequencia_code, pergunta_codigo, value)
+        async responder( pergunta_codigo, value, grupo ) {
+            if( grupo != 'VITAL' ) {
+                let user = await this.auth.get()
+                this.fila.resposta(user.id, this.cache.fila.caixa, this.cache.fila.sequencia_code, pergunta_codigo, value)
+            }else {
+                this.sinais_vitais[pergunta_codigo] = value
+            }
         },
         drag_img() {
             this.$refs.image.addEventListener('mousedown', (event) => {             

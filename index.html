@@ -33,7 +33,7 @@
     <template id="c-form">
         <div class="l-form">
             <div class="finalizando" v-if="loading">
-                Finalizando...
+                Processando...
             </div>
             <div v-if="is_edit" class="editing">
                 <button class="btn btn--success" @click="doc_new()">Carregar Novo Documento</button>
@@ -79,23 +79,26 @@
                                     type="text" 
                                     v-if="q.tipo_campo != 'radio'" 
                                     :name="'option_'+q.codigo"
-                                    @click="responder( q.codigo, index + 1  )" >
+                                    @blur="responder( q.codigo, $event.target.value, q.grupo_codigo  )" >
                                 
                                 <span v-if="q.tipo_campo == 'radio'"  v-for="(input, index ) in q.arr.split(',')">
                                     <input 
                                         type="radio" 
                                         :name="'option_'+q.codigo"
-                                        @click="responder( q.codigo, index + 1  )"
+                                        @click="responder( q.codigo, index + 1, q.grupo_codigo  )"
                                         >
                                     <small> {{ input }} </small>
                                 </span>
+                            </div>
+                            <div v-if="error.status" class="error">
+                                {{ error.message }}
                             </div>
                             <div v-if="$route.params.step < questions.length">
                                 <button type="submit" class="btn btn--state">NEXT</button>
                             </div>
                             <div v-else>
                                 <button type="submit" class="btn btn--state">FINALIZAR</button>
-                            </div>
+                            </div>                           
                         </form>
                     </div>
                 </div>

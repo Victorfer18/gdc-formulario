@@ -5,52 +5,48 @@ const cache = {
     set: object => localStorage.setItem(cache.name, JSON.stringify({ ...cache.get(), ...object }))
 }
 
-function Http( base = null )
-{
+function Http(base = null) {
     let protocol = window.location.protocol
-    let hostname =  window.location.hostname.replace( 'www.', '' )
-    base         = base == null ? `${protocol}//${hostname}` : base
-    let options  = {
-        headers: { 'Content-Type' : 'application/x-www-form-urlencoded' },
+    let hostname = window.location.hostname.replace('www.', '')
+    base = base == null ? `${protocol}//${hostname}` : base
+    let options = {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         credentials: "same-origin",
         method: 'POST',
         mode: 'cors',
         cache: 'default',
         body: null
     }
-    function obj_to_url( obj ) 
-    {
-        let indices =  Object.keys( obj );
-        let url     = indices.map( i => `${i}=${obj[i]}` ).join('&');
-        return encodeURI( url );            
+    function obj_to_url(obj) {
+        let indices = Object.keys(obj);
+        let url = indices.map(i => `${i}=${obj[i]}`).join('&');
+        return encodeURI(url);
     }
-    const post = async ( path, data, fn = null ) => 
-    {
+    const post = async (path, data, fn = null) => {
         let end_point = base + path
-        let dados     = obj_to_url( data )
-        let opt       = options
-        opt.body      = dados
-        try {            
-            let request   = await fetch( end_point, opt )
-            let res       = await request.json()
-            if( fn ) { fn( res ) }        
+        let dados = obj_to_url(data)
+        let opt = options
+        opt.body = dados
+        try {
+            let request = await fetch(end_point, opt)
+            let res = await request.json()
+            if (fn) { fn(res) }
             return res
         } catch (error) {
-            console.log( error )
-            return false            
+            console.log(error)
+            return false
         }
     }
-    const get = async ( path, data, fn = null ) => 
-    {
-        let dados     = obj_to_url( data )
+    const get = async (path, data, fn = null) => {
+        let dados = obj_to_url(data)
         let end_point = base + path + "?" + dados
-        try {            
-            let request   = await fetch( end_point )
-            let res       = await request.json()
-            if( fn ) { fn( res ) }       
+        try {
+            let request = await fetch(end_point)
+            let res = await request.json()
+            if (fn) { fn(res) }
             return res
         } catch (error) {
-            console.log( error )
+            console.log(error)
             return false
         }
     }
@@ -58,7 +54,7 @@ function Http( base = null )
         obj_to_url,
         base,
         get,
-        post        
+        post
     }
 }
 
@@ -68,7 +64,7 @@ const crud = {
     get: name => cache.get()?.[name] || [],
     post: (name, data) => {
         let storage = cache.get()
-        data = { id: Date.now() , ...data }
+        data = { id: Date.now(), ...data }
         storage[name] = [...(storage?.[name] || []), data]
         cache.set(storage)
     },
@@ -89,19 +85,19 @@ const crud = {
 }
 
 const auth = {
-    login: async (username, password) =>  {
-      let res = await Api.post('/v1/login', {email:username, senha:password})
-      if( res.next ) {
-        auth.set(res.jwt)
-      }
-      return res
-    }, 
+    login: async (username, password) => {
+        let res = await Api.post('/v1/login', { email: username, senha: password })
+        if (res.next) {
+            auth.set(res.jwt)
+        }
+        return res
+    },
     logged: async () => auth.jwt() != null,
     logout: async () => localStorage.removeItem('ACCESS_TOKEN'),
-    set: async token =>  localStorage.setItem('ACCESS_TOKEN', token),
-    jwt: () => localStorage.getItem('ACCESS_TOKEN'), 
-    get: async () =>  JSON.parse( atob( (await auth.jwt()).split('.')[0] ) ),
-    me: async () =>  await Api.get('/v1/me', { jwt: (await auth.jwt()) })
+    set: async token => localStorage.setItem('ACCESS_TOKEN', token),
+    jwt: () => localStorage.getItem('ACCESS_TOKEN'),
+    get: async () => JSON.parse(atob((await auth.jwt()).split('.')[0])),
+    me: async () => await Api.get('/v1/me', { jwt: (await auth.jwt()) })
 }
 
 const fila = {
@@ -110,7 +106,20 @@ const fila = {
     questions: async codigo_empresa => await Api.get('/v1/formulario', { jwt: (await auth.jwt()), codigo_empresa }),
     image: (caixa, seguencia, foto) => `http://api.digitalgroupbrasil.com.br/v1/image/${caixa}/${seguencia}/${foto}`,
     resposta: async (usuario_id, caixa, documento, pergunta_codigo, value) => await Api.post('/v1/resposta', { jwt: (await auth.jwt()), usuario_id, caixa, documento, pergunta_codigo, value }),
-    cancel: async (caixa, documento) => await Api.get('/v1/formulario', { jwt: (await auth.jwt()), caixa, documento })
+    cancel: async (caixa, documento) => await Api.get('/v1/formulario', { jwt: (await auth.jwt()), caixa, documento }),
+    sinais_vitais: async (
+        temperatura = '?',
+        dataResultadoExame = '?',
+        altura = '?',
+        biotipo = '?',
+        frequenciaPulso = '?',
+        frequenciaRespiratoria = '?',
+        perimetroCintura = '?',
+        perimetroQualdril = '?',
+        peso = '?',
+        pressaoMaxima = '?',
+        pressaoMinima = '?'
+    ) => await Api.get('/v1/dados-vitais', { jwt: (await auth.jwt()), temperatura, dataResultadoExame, altura, biotipo, frequenciaPulso, frequenciaRespiratoria, perimetroCintura, perimetroQualdril, peso, pressaoMaxima, pressaoMinima }),
 }
 
 export { auth, fila }
