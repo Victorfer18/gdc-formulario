@@ -50,10 +50,9 @@
             </div>
             <div class="a-files">
                 <div class="vitais">
-                    <span> <b>Nome</b>: {{ vital.nome }} </span> <br>
-                    <span> <b>Altura</b>: {{ vital.altura }} </span>
-                    <span> <b>Peso</b>: {{ vital.peso }} </span>
-                    <span> <b>Presão</b>: {{ vital.presao }} </span>
+                    <span> <b>Número Seguencial</b>: {{ ficha.seguencial }} </span> <br>
+                    <span> <b>Data</b>: {{ ficha.data }} </span> - 
+                    <span> <b>Funcionario</b>: {{ ficha.funcionario }} </span>
                 </div>
                 <img  :src="fila.image(cache.fila.caixa,cache.fila.batchtrack,img)" v-for="img in galery" @click="doc_set(img)" :class="{ active: img == image_destac }">                
             </div>
@@ -67,7 +66,7 @@
                     <img src="./assets/icon/logout.svg" @click="logout()">
                 </div>
                 <div class="steps">
-                    <span v-for="(fr, index) in questions.length" :class="$route.params.step == index + 1 ? 'active' : ''"></span>
+                    <a  :href="'#/dash/' + (index + 1)" v-for="(fr, index) in questions.length"  :title="fr.nome" :class="$route.params.step == index + 1 ? 'active' : ''"></a>
                 </div>
                 <div class="forms" ref="forms">
                     <div>

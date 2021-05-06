@@ -174,7 +174,7 @@
     align-items: center;
     justify-content: center;
 }
-.steps span {
+.steps a {
     display: block;
     background-color: #bdc3c7;
     width: 15px;
@@ -182,7 +182,7 @@
     border-radius: 50px;
     margin: 0 10px;   
 }
-.steps span.active {
+.steps a.active {
     outline: 1px solid #2980b9;
     outline-offset: 6px;
     -moz-outline-radius: 25px;

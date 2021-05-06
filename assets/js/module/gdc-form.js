@@ -10,6 +10,11 @@ export default {
             popup: false,
             loading: false,
             sinais_vitais: {},
+            ficha: {
+                seguencial: 0,
+                data: '00/00/000',
+                funcionario: 0
+            },
             vital: {
                 nome: 'Jose Antonio',
                 altura: '1,75',
@@ -182,6 +187,9 @@ export default {
         this.is_editing()
         this.galery = [ this.cache.fila?.documento ,...(this.cache.fila.pagina?.split(',') || []) ]
         this.image_destac = this.cache.fila.documento        
+        this.ficha.seguencial = this.cache.fila.sequencia_code
+        this.ficha.data = this.cache.fila.data || '00/00/0000'
+        this.ficha.funcionario = this.cache.fila.funcionario || 0
     }
 
 }
