@@ -66,25 +66,33 @@
                     <img src="./assets/icon/logout.svg" @click="logout()">
                 </div>
                 <div class="steps">
-                    <a  :href="'#/dash/' + (index + 1)" v-for="(fr, index) in questions.length"  :title="fr.nome" :class="$route.params.step == index + 1 ? 'active' : ''"></a>
+                    <a  :href="'#/dash/' + (index + 1)" v-for="(fr, index) in questions"  :title="fr.nome" :class="$route.params.step == index + 1 ? 'active' : ''"></a>
                 </div>
                 <div class="forms" ref="forms">
                     <div>
                         <form v-for="(fr, index) in questions" v-if=" $route.params.step == ( index + 1) " action="javascript:void(0)" @submit="next_stap()" class="form form--questions">
                             <h4>{{ fr.nome }}</h4>
                             <div v-for="q in fr.questions" class="combo_input">
-                                <span v-if="q.tipo_campo == 'titulo'">
-                                    <h5>{{q.enunciado}}</h5> <br>
+                                <span v-if="q.tipo_campo == 'title'">
+                                    <h4>{{q.enunciado}} </h4>
                                 </span>
                                 <span v-else>
-                                    <label for="">{{ q.enunciado }}</label>
-                                    <input 
+                                    
+                                    <label for="">
+                                        <input 
+                                            type="checkbox" 
+                                            v-if="q.tipo_campo == 'checkbox'" 
+                                            :name="'option_'+q.codigo"
+                                            @blur="responder( q.codigo, $event.target.value, q.grupo_codigo  )" >
+                                        {{ q.enunciado }}
+                                    </label>                                        
+                                        <input 
                                         type="text" 
-                                        v-if="q.tipo_campo != 'radio'" 
+                                        v-if="q.tipo_campo == 'text'" 
                                         :name="'option_'+q.codigo"
                                         @blur="responder( q.codigo, $event.target.value, q.grupo_codigo  )" >
                                     
-                                    <span v-if="q.tipo_campo == 'radio'"  v-for="(input, index ) in q.arr.split(',')">
+                                    <span v-if="q.tipo_campo == 'radio' "  v-for="(input, index ) in q.arr?.split(',')">
                                         <input 
                                             :type="q.tipo_campo" 
                                             :name="'option_'+q.codigo"

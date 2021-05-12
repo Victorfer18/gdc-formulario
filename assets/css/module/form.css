@@ -1,6 +1,6 @@
 .form { }
 .form textarea,
-.form input:not([type=radio]) {
+.form input:not([type=radio],[type=checkbox]) {
     display: block;
     width: 100%;
     text-indent: 40px;
@@ -111,4 +111,8 @@
 }
 .form--login input::placeholder {
     color: #FFF;
+}
+h4 {
+    color: #2980b9;
+    font-size: 22px;
 }
