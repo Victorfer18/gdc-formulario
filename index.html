@@ -73,20 +73,25 @@
                         <form v-for="(fr, index) in questions" v-if=" $route.params.step == ( index + 1) " action="javascript:void(0)" @submit="next_stap()" class="form form--questions">
                             <h4>{{ fr.nome }}</h4>
                             <div v-for="q in fr.questions" class="combo_input">
-                                <label for="">{{ q.enunciado }}</label>
-                                <input 
-                                    type="text" 
-                                    v-if="q.tipo_campo != 'radio'" 
-                                    :name="'option_'+q.codigo"
-                                    @blur="responder( q.codigo, $event.target.value, q.grupo_codigo  )" >
-                                
-                                <span v-if="q.tipo_campo == 'radio'"  v-for="(input, index ) in q.arr.split(',')">
+                                <span v-if="q.tipo_campo == 'titulo'">
+                                    <h5>{{q.enunciado}}</h5> <br>
+                                </span>
+                                <span v-else>
+                                    <label for="">{{ q.enunciado }}</label>
                                     <input 
-                                        type="radio" 
+                                        type="text" 
+                                        v-if="q.tipo_campo != 'radio'" 
                                         :name="'option_'+q.codigo"
-                                        @click="responder( q.codigo, index + 1, q.grupo_codigo  )"
-                                        >
-                                    <small> {{ input }} </small>
+                                        @blur="responder( q.codigo, $event.target.value, q.grupo_codigo  )" >
+                                    
+                                    <span v-if="q.tipo_campo == 'radio'"  v-for="(input, index ) in q.arr.split(',')">
+                                        <input 
+                                            :type="q.tipo_campo" 
+                                            :name="'option_'+q.codigo"
+                                            @click="responder( q.codigo, index + 1, q.grupo_codigo  )"
+                                            >
+                                        <small> {{ input }} </small>
+                                    </span>
                                 </span>
                             </div>
                             <div v-if="error.status" class="error">
