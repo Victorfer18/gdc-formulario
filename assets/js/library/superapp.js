@@ -108,17 +108,17 @@ const fila = {
     resposta: async (usuario_id, caixa, documento, pergunta_codigo, value) => await Api.post('/v1/resposta', { jwt: (await auth.jwt()), usuario_id, caixa, documento, pergunta_codigo, value }),
     cancel: async (caixa, documento) => await Api.get('/v1/formulario', { jwt: (await auth.jwt()), caixa, documento }),
     sinais_vitais: async (
-        temperatura = '?',
-        dataResultadoExame = '?',
-        altura = '?',
-        biotipo = '?',
-        frequenciaPulso = '?',
-        frequenciaRespiratoria = '?',
-        perimetroCintura = '?',
-        perimetroQualdril = '?',
-        peso = '?',
-        pressaoMaxima = '?',
-        pressaoMinima = '?'
+        temperatura = '',
+        dataResultadoExame = '',
+        altura = '',
+        biotipo = '',
+        frequenciaPulso = '',
+        frequenciaRespiratoria = '',
+        perimetroCintura = '',
+        perimetroQualdril = '',
+        peso = '',
+        pressaoMaxima = '',
+        pressaoMinima = ''
     ) => await Api.get('/v1/dados-vitais', { jwt: (await auth.jwt()), temperatura, dataResultadoExame, altura, biotipo, frequenciaPulso, frequenciaRespiratoria, perimetroCintura, perimetroQualdril, peso, pressaoMaxima, pressaoMinima }),
 }
 
